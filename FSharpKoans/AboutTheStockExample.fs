@@ -27,6 +27,8 @@ open FSharpKoans.Core
 //---------------------------------------------------------------
 [<Koan(Sort = 15)>]
 module ``about the stock example`` =
+    open System
+    open System.Globalization
     
     let stockData =
         [ "Date,Open,High,Low,Close,Volume,Adj Close";
@@ -58,8 +60,13 @@ module ``about the stock example`` =
     // tests for yourself along the way. You can also try 
     // using the F# Interactive window to check your progress.
 
-    [<Koan>]
-    let YouGotTheAnswerCorrect() =
-        let result =  __
+    let read d = System.Double.Parse(d)
         
+    let parse (s:string) = 
+        let splitted = s.Split ','     
+        (splitted.[0], abs(read(splitted.[1]) - read(splitted.[4])))
+                 
+    [<Koan>]
+    let YouGotTheAnswerCorrect() =            
+        let result = List.map parse stockData.Tail |> List.maxBy snd |> fst
         AssertEquality "2012-03-13" result
